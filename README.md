@@ -1,7 +1,5 @@
-# Awesome Project Build with TypeORM
+# Seller API
 
-Steps to run this project:
-
-1. Run `npm i` command
-2. Setup database settings inside `data-source.ts` file
-3. Run `npm start` command
+Projeto criado para gerenciamento de vendas e seus respectivos vendedores.
+Nesse primeiro momento será gerado uma api e posteriormente o front end
+da aplicação para consumo dessa api.
