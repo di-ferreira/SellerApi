@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { productRoutes } from "./product.routes";
 import { sellerRoutes } from "./seller.routes";
 
 const routes = Router();
@@ -8,5 +9,6 @@ routes.get("/", (req, res) => {
 });
 
 routes.use("/seller", sellerRoutes);
+routes.use("/product", productRoutes);
 
 export { routes };

@@ -14,7 +14,7 @@ sellerRoutes.post("/", async (req, res) => {
     seller.sales_target = sales_target;
     seller.password = password;
     await sellerRepository.save(seller);
-    return res.status(200).json({ result: seller });
+    return res.status(200).json({ result: "Seller saved successfully!" });
   } catch (err) {
     return res.status(400).json({ error: err });
   }
@@ -22,7 +22,9 @@ sellerRoutes.post("/", async (req, res) => {
 
 sellerRoutes.get("/", async (req, res) => {
   try {
-    const sellers = await sellerRepository.find();
+    const sellers = await sellerRepository.find({
+      select: { id: true, name: true, email: true, sales_target: true },
+    });
     return res.status(200).json({ result: sellers });
   } catch (err) {
     return res.status(400).json({ error: err });
@@ -32,7 +34,11 @@ sellerRoutes.get("/", async (req, res) => {
 sellerRoutes.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const seller = await sellerRepository.findOneBy({ id: parseInt(id) });
+    const seller = await sellerRepository.find({
+      where: { id: parseInt(id) },
+      select: { id: true, name: true, email: true, sales_target: true },
+    });
+
     return res.status(200).json({ result: seller });
   } catch (err) {
     return res.status(400).json({ error: err });
