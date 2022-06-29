@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Sale } from "./Sale";
 
-@Entity("vendedores")
+@Entity()
 export class Seller {
   @PrimaryGeneratedColumn()
   id: number;
@@ -16,4 +17,7 @@ export class Seller {
 
   @Column({ type: "float", precision: 10, scale: 2 })
   sales_target: number;
+
+  @OneToMany(() => Sale, (sale) => sale.seller)
+  sales: Sale[];
 }

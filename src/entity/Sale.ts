@@ -1,13 +1,14 @@
 import {
   Column,
   Entity,
-  JoinColumn,
-  OneToOne,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { SaleItem } from "./SaleItem";
 import { Seller } from "./Seller";
 
-@Entity("vendas")
+@Entity()
 export class Sale {
   @PrimaryGeneratedColumn()
   id: number;
@@ -15,7 +16,12 @@ export class Sale {
   @Column("datetime")
   date: string;
 
-  @OneToOne(() => Seller)
-  @JoinColumn()
+  @Column({ type: "float", precision: 10, scale: 2 })
+  total: number;
+
+  @ManyToOne(() => Seller, (seller) => seller.sales)
   seller: Seller;
+
+  @OneToMany(() => SaleItem, (saleItems) => saleItems.sale)
+  saleItems: SaleItem[];
 }

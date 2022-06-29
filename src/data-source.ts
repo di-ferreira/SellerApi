@@ -8,7 +8,7 @@ import { Seller } from "./entity/Seller";
 export const AppDataSource = new DataSource({
   type: "sqlite",
   database: "src/db/database.sqlite",
-  synchronize: false,
+  synchronize: true,
   logging: false,
   entities: [Seller, Product, Sale, SaleItem],
   migrations: [],

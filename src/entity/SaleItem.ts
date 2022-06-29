@@ -1,14 +1,8 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Product } from "./Product";
 import { Sale } from "./Sale";
 
-@Entity("items_venda")
+@Entity()
 export class SaleItem {
   @PrimaryGeneratedColumn()
   id: number;
@@ -16,11 +10,12 @@ export class SaleItem {
   @Column("int")
   quantity: number;
 
-  @OneToOne(() => Product)
-  @JoinColumn()
+  @Column({ type: "float", precision: 10, scale: 2 })
+  total: number;
+
+  @ManyToOne(() => Product, (product) => product.saleItems)
   product: Product;
 
-  @OneToOne(() => Sale)
-  @JoinColumn()
+  @ManyToOne(() => Sale, (sale) => sale.saleItems)
   sale: Sale;
 }
