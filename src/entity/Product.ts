@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity("vendedores")
-export class Seller {
+@Entity("produtos")
+export class Product {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -9,11 +9,11 @@ export class Seller {
   name: string;
 
   @Column({ length: 255 })
-  email: string;
-
-  @Column({ length: 255 })
-  password: string;
+  description: string;
 
   @Column({ type: "float", precision: 10, scale: 2 })
-  sales_target: number;
+  price: number;
+
+  @Column({ type: "float", precision: 10, scale: 2 })
+  profit: number;
 }
