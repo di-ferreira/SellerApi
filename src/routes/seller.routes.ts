@@ -39,4 +39,43 @@ sellerRoutes.get("/:id", async (req, res) => {
   }
 });
 
+sellerRoutes.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const seller = await sellerRepository.findOneBy({ id: parseInt(id) });
+    const { name, email, password, sales_target } = req.body;
+
+    if (name) {
+      seller.name = name;
+    }
+    if (email) {
+      seller.email = email;
+    }
+    if (sales_target) {
+      seller.sales_target = sales_target;
+    }
+    if (password) {
+      seller.password = password;
+    }
+
+    await sellerRepository.save(seller);
+    return res.status(200).json({ result: seller });
+  } catch (err) {
+    return res.status(400).json({ error: err });
+  }
+});
+
+sellerRoutes.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const seller = await sellerRepository.findOneBy({ id: parseInt(id) });
+
+    await sellerRepository.remove(seller);
+
+    return res.status(200).json({ result: "Seller removed successfully!" });
+  } catch (err) {
+    return res.status(400).json({ error: err });
+  }
+});
+
 export { sellerRoutes };
