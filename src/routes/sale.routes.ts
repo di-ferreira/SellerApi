@@ -1,10 +1,9 @@
 import { Router } from "express";
 import { format } from "date-fns";
 import { Sale } from "../models/Sale";
-import saleRepository from "../repositories/Sale";
 import { SaleItem } from "../models/SaleItem";
+import saleRepository from "../repositories/Sale";
 import saleItemRepository from "../repositories/SaleItem";
-import { Product } from "../models/Product";
 import productRepository from "../repositories/Product";
 
 const saleRoutes = Router();
@@ -19,7 +18,7 @@ saleRoutes.post("/", async (req, res) => {
     sale.total = 0.0;
     await saleRepository.save(sale);
 
-    saleItems.map(async (saleItem) => {
+    await saleItems.map(async (saleItem) => {
       const newSaleItem = new SaleItem();
       let productItem = await productRepository.findOneBy({
         id: parseInt(saleItem.product),
@@ -28,13 +27,10 @@ saleRoutes.post("/", async (req, res) => {
       newSaleItem.product = saleItem.product;
       newSaleItem.total = productItem.price * saleItem.quantity;
       newSaleItem.sale = sale;
-      saleItemRepository.save(newSaleItem);
-      totalSale += newSaleItem.total;
-      console.log("total: ", totalSale);
-      await saleRepository.update(sale, { total: totalSale });
+      totalSale = totalSale + productItem.price * saleItem.quantity;
+      await saleItemRepository.save(newSaleItem);
+      await saleRepository.update(sale.id, { total: totalSale });
     });
-
-    console.log("totalSale: ", sale.total);
 
     return res.status(200).json({ result: "Sale saved successfully!" });
   } catch (err) {
