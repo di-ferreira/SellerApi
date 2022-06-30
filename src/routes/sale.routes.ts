@@ -62,6 +62,20 @@ saleRoutes.get("/:id", async (req, res) => {
   }
 });
 
+saleRoutes.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { saleItems } = req.body;
+  try {
+    const sale = await saleRepository.find({
+      relations: { seller: true, saleItems: true },
+      where: { id: parseInt(id) },
+    });
+    return res.status(200).json({ result: sale });
+  } catch (err) {
+    return res.status(400).json({ error: err });
+  }
+});
+
 saleRoutes.delete("/:id", async (req, res) => {
   const { id } = req.params;
   try {

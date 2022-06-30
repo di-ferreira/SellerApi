@@ -13,7 +13,7 @@ export class SaleItem {
   @Column({ type: "float", precision: 10, scale: 2 })
   total: number;
 
-  @ManyToOne(() => Product, (product) => product.saleItems)
+  @ManyToOne(() => Product, (product) => product.saleItems, { eager: true })
   product: Product;
 
   @ManyToOne(() => Sale, (sale) => sale.saleItems)
