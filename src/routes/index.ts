@@ -13,6 +13,6 @@ routes.get("/", (req, res) => {
 routes.use("/seller", sellerRoutes);
 routes.use("/product", productRoutes);
 routes.use("/sale", saleRoutes);
-routes.use("/saleItems", saleItemRoutes);
+routes.use("/saleitem", saleItemRoutes);
 
 export { routes };

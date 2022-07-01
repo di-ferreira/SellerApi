@@ -5,6 +5,7 @@ import { SaleItem } from "../models/SaleItem";
 import saleRepository from "../repositories/Sale";
 import saleItemRepository from "../repositories/SaleItem";
 import productRepository from "../repositories/Product";
+import { Product } from "../models/Product";
 
 const saleRoutes = Router();
 
@@ -64,7 +65,6 @@ saleRoutes.get("/:id", async (req, res) => {
 
 saleRoutes.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { saleItems } = req.body;
   try {
     const sale = await saleRepository.find({
       relations: { seller: true, saleItems: true },
@@ -83,6 +83,32 @@ saleRoutes.delete("/:id", async (req, res) => {
 
     await saleRepository.remove(sale);
     return res.status(200).json({ result: "Sale removed successfully!" });
+  } catch (err) {
+    return res.status(400).json({ error: err });
+  }
+});
+
+/* ---  SaleItems Routes --- */
+saleRoutes.post("/:id/saleitem", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { quantity, product } = req.body;
+    const ItemProduct: Product = await productRepository.findOneBy({
+      id: parseInt(product),
+    });
+    const saleItem = new SaleItem();
+    const sale = await saleRepository.findOneBy({ id: parseInt(id) });
+
+    saleItem.product = ItemProduct;
+    saleItem.quantity = quantity;
+    saleItem.sale = sale;
+    saleItem.total = ItemProduct.price * quantity;
+    sale.total = sale.total + saleItem.total;
+
+    await saleItemRepository.save(saleItem);
+    await saleRepository.update(sale.id, sale);
+
+    return res.status(200).json({ result: "Item added successfully!" });
   } catch (err) {
     return res.status(400).json({ error: err });
   }
