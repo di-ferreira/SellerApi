@@ -73,7 +73,7 @@ productRoutes.delete("/:id", async (req, res) => {
   try {
     const product = await productRepository.findOneBy({ id: parseInt(id) });
 
-    await productRepository.remove(product);
+    await productRepository.delete(product);
     return res.status(200).json({ result: product });
   } catch (err) {
     return res.status(400).json({ error: err });
