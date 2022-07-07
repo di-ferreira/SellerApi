@@ -1,83 +1,84 @@
-import { Router } from "express";
-import { Product } from "../models/Product";
-import productRepository from "../repositories/Product";
+import {Request, Response, Router} from 'express';
+import {Product} from '../models/Product';
+import productRepository from '../repositories/Product';
+import {checkToken} from '../middleware/tokenVerify';
 
 const productRoutes = Router();
 
-productRoutes.post("/", async (req, res) => {
-  try {
-    const { name, description, price, profit } = req.body;
+productRoutes.post('/', [checkToken], async (req: Request, res: Response) => {
+	try {
+		const {name, description, price, profit} = req.body;
 
-    const product = new Product();
+		const product = new Product();
 
-    product.name = name;
-    product.description = description;
-    product.price = price;
-    product.profit = profit;
+		product.name = name;
+		product.description = description;
+		product.price = price;
+		product.profit = profit;
 
-    await productRepository.save(product);
-    return res.status(200).json({ result: product });
-  } catch (err) {
-    return res.status(400).json({ error: err });
-  }
+		await productRepository.save(product);
+		return res.status(200).json({result: product});
+	} catch (err) {
+		return res.status(400).json({error: err});
+	}
 });
 
-productRoutes.get("/", async (req, res) => {
-  try {
-    const products = await productRepository.find();
-    return res.status(200).json({ result: products });
-  } catch (err) {
-    return res.status(400).json({ error: err });
-  }
+productRoutes.get('/', [checkToken], async (req: Request, res: Response) => {
+	try {
+		const products = await productRepository.find();
+		return res.status(200).json({result: products});
+	} catch (err) {
+		return res.status(400).json({error: err});
+	}
 });
 
-productRoutes.get("/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const product = await productRepository.findOneBy({ id: parseInt(id) });
-    return res.status(200).json({ result: product });
-  } catch (err) {
-    return res.status(400).json({ error: err });
-  }
+productRoutes.get('/:id', async (req, res) => {
+	const {id} = req.params;
+	try {
+		const product = await productRepository.findOneBy({id: parseInt(id)});
+		return res.status(200).json({result: product});
+	} catch (err) {
+		return res.status(400).json({error: err});
+	}
 });
 
-productRoutes.put("/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const { name, description, price, profit } = req.body;
+productRoutes.put('/:id', async (req, res) => {
+	const {id} = req.params;
+	try {
+		const {name, description, price, profit} = req.body;
 
-    const product = await productRepository.findOneBy({ id: parseInt(id) });
+		const product = await productRepository.findOneBy({id: parseInt(id)});
 
-    if (name) {
-      product.name = name;
-    }
-    if (description) {
-      product.description = description;
-    }
-    if (price) {
-      product.price = price;
-    }
-    if (profit) {
-      product.profit = profit;
-    }
+		if (name) {
+			product.name = name;
+		}
+		if (description) {
+			product.description = description;
+		}
+		if (price) {
+			product.price = price;
+		}
+		if (profit) {
+			product.profit = profit;
+		}
 
-    await productRepository.save(product);
-    return res.status(200).json({ result: product });
-  } catch (err) {
-    return res.status(400).json({ error: err });
-  }
+		await productRepository.save(product);
+		return res.status(200).json({result: product});
+	} catch (err) {
+		return res.status(400).json({error: err});
+	}
 });
 
-productRoutes.delete("/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const product = await productRepository.findOneBy({ id: parseInt(id) });
+productRoutes.delete('/:id', async (req, res) => {
+	const {id} = req.params;
+	try {
+		const product = await productRepository.findOneBy({id: parseInt(id)});
 
-    await productRepository.delete(product);
-    return res.status(200).json({ result: product });
-  } catch (err) {
-    return res.status(400).json({ error: err });
-  }
+		await productRepository.delete(product);
+		return res.status(200).json({result: product});
+	} catch (err) {
+		return res.status(400).json({error: err});
+	}
 });
 
-export { productRoutes };
+export {productRoutes};
